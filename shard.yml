@@ -1,0 +1,16 @@
+name: DashBot
+version: 0.1.0
+
+authors:
+  - Arthur Poulet <arthur.poulet@mailoo.org>
+
+license: MIT
+
+dependencies:
+  rollable:
+    github: Nephos/crystal_rollable
+  CrystalIrc:
+    github: Meoowww/CrystalIrc
+    branch: master
+  mongo:
+    github: datanoise/mongo.cr

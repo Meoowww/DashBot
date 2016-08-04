@@ -1,0 +1,14 @@
+version: 1.0
+shards:
+  CrystalIrc:
+    github: Meoowww/CrystalIrc
+    commit: 8f1cd4190ea27c7fe7b342d9bfe5d52b677aab37
+
+  mongo:
+    github: datanoise/mongo.cr
+    commit: 36d095646f4cf99c5bc2964a9f55d2c76310cc03
+
+  rollable:
+    github: Nephos/crystal_rollable
+    version: 0.1.2
+
