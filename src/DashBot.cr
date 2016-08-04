@@ -1,7 +1,6 @@
 require "CrystalIrc"
 require "rollable"
 require "./DashBot/*"
-require "./private"
 
 module DashBot
   def start
