@@ -2,7 +2,7 @@ version: 1.0
 shards:
   CrystalIrc:
     github: Meoowww/CrystalIrc
-    commit: 8f1cd4190ea27c7fe7b342d9bfe5d52b677aab37
+    commit: 60c98261f84e77f469496de39f138d0b9a61a4e2
 
   mongo:
     github: datanoise/mongo.cr

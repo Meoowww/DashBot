@@ -11,7 +11,7 @@ module DashBot
 
     bot.connect
     sleep 1.5
-    bot.join([CrystalIrc::Chan.new("#equilibre")])
+    bot.join([CrystalIrc::Chan.new("#equilibre2")])
 
     loop do
       begin
