@@ -1,17 +1,19 @@
 require "CrystalIrc"
 require "rollable"
+require "./DashBot/rights"
 require "./DashBot/*"
 
 module DashBot
   def start
-    bot = CrystalIrc::Bot.new ip: "irc.mozilla.org", nick: "Dasshy2", read_timeout: 300_u16
+    bot = CrystalIrc::Bot.new ip: "irc.mozilla.org", nick: "Dasshy", read_timeout: 300_u16
 
     BasicCommands.bind(bot)
     UserCommands.bind(bot)
+    AdminCommands.bind(bot)
 
     bot.connect
     sleep 1.5
-    bot.join([CrystalIrc::Chan.new("#equilibre2")])
+    bot.join([CrystalIrc::Chan.new("#equilibre")])
 
     loop do
       begin

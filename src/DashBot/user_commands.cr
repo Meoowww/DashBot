@@ -1,25 +1,14 @@
 module DashBot
   module UserCommands
-    def authorized?(msg, group = "admin")
-      DB["users"].count({"id" => msg.source.to_s.source_id, "groups" => {"$elemMatch" => {"$eq" => group} } }) == 1
-    end
-
-    #require "mongo"
-    #cli = Mongo::Client.new "mongodb://localhost"
-    #db = cli["dash_bot"]
+    include Rights
 
     def bind(bot)
-      bot.on("PRIVMSG", message: /^!register/) do |msg|
-        id = msg.source.to_s.source_id
-        is_admin = DB["users"].count({} of String => String) == 0
-        n = DB["users"].count({"id" => id})
-        if n > 0
-          msg.reply "Cannot register \"#{id}\" twice"
-        else
-          msg.reply "Register \"#{id}\""
-          DB["users"].insert({"id" => id, "groups" => (is_admin ? ["admin"] : ["default"]) })
-        end
-      end.on("PRIVMSG", message: /^!group add (\w+) (\w+)/) do |msg, match|
+      bind_register bot
+      bind_group bot
+    end
+
+    def bind_group(bot)
+      bot.on("PRIVMSG", message: /^!group add (\w+) (\w+)/) do |msg, match|
         id = msg.source.to_s.source_id
         if !authorized? msg
           msg.reply "Unauthorized"
@@ -38,6 +27,21 @@ module DashBot
         end
       end
     end
+
+    def bind_register(bot)
+      bot.on("PRIVMSG", message: /^!register/) do |msg|
+        id = msg.source.to_s.source_id
+        is_admin = DB["users"].count({} of String => String) == 0
+        n = DB["users"].count({"id" => id})
+        if n > 0
+          msg.reply "Cannot register \"#{id}\" twice"
+        else
+          msg.reply "Register \"#{id}\""
+          DB["users"].insert({"id" => id, "groups" => (is_admin ? ["admin"] : ["default"]) })
+        end
+      end
+    end
+
     extend self
   end
 end
