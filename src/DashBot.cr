@@ -11,9 +11,9 @@ module DashBot
     UserCommands.bind(bot)
     AdminCommands.bind(bot)
 
-    bot.connect
-    sleep 1.5
-    bot.join([CrystalIrc::Chan.new("#equilibre")])
+    bot.connect.on_ready do
+      bot.join([CrystalIrc::Chan.new("#equilibre")])
+    end
 
     loop do
       begin
