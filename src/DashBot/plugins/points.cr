@@ -18,7 +18,7 @@ module DashBot
           else
             hash["count"] = 1
             DB["points"].insert(hash)
-            msg.reply "#{match[2]} has now 1 points #{match[1]}"
+            msg.reply "#{match[2]} has now 1 point #{match[1]}"
           end
         end
       end
