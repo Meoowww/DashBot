@@ -6,7 +6,7 @@ module DashBot
       def bind(bot)
         bot.on("PRIVMSG", message: /^!p ([[:graph:]]+) ([[:graph:]]+)/) do |msg, match|
           match = match.as Regex::MatchData
-          hash = {"nick" => match[2], "type" => match[1]} of String => String | Int32
+          hash = {"nick" => match[2], "type" => match[1].downcase} of String => String | Int32
           STDERR.puts hash.inspect
           n = DB["points"].count(hash)
           if n > 0
