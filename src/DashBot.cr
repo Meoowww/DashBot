@@ -5,6 +5,10 @@ require "rollable"
 require "./DashBot/*"
 require "./DashBot/plugins/*"
 
+module Irc
+  include CrystalIrc
+end
+
 module DashBot
   def start
     bot = CrystalIrc::Bot.new ip: "irc.mozilla.org", nick: "Dasshy", read_timeout: 300_u16
@@ -15,7 +19,7 @@ module DashBot
     Plugins::Points.bind(bot)
 
     bot.connect.on_ready do
-      bot.join([CrystalIrc::Chan.new("#equilibre")])
+      bot.join([Irc::Chan.new("#equilibre")])
     end
 
     loop do
