@@ -68,7 +68,7 @@ module DashBot
             msg.reply "Register \"#{msg.source_id}\""
             is_admin = DB.exec({Int64}, "SELECT COUNT(*) FROM users").to_hash[0]["count"] == 0
             DB.exec "INSERT INTO users (name) VALUES ($1)", [msg.source_id]
-            DB.exec "INSERT INTO groups (user_name, name) VALUES ($1, $2)", [msg.source_id, "admin"] if is_admin
+            DB.exec "INSERT INTO groups (user_name, name) VALUES ($1, $2)", [msg.source_id, is_admin ? "admin" : "default"]
           end
         end
       end
