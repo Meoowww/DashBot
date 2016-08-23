@@ -15,6 +15,7 @@ crystal deps install
 # Build the project
 crystal b -s --release src/DashBot.cr
 # Configure the database
+psql -U postgres postgres -c "CREATE USER root WITH PASSWORD 'toor' SUPERUSER;"
 psql -U postgres postgres -c "CREATE DATABASE dash_bot"
 echo "PG_URL=postgres://root:toor@localhost/dash_bot" > .env
 # Run the bot
