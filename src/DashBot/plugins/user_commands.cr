@@ -21,8 +21,9 @@ module DashBot
           next if !authorize!(msg)
           match = match.as Regex::MatchData
           if user_exists? match[1]
-            groups = DB.exec({Int64, String}, "SELECT groups.id AS id, groups.name AS name FROM groups INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
-            if idx = groups.index{|e| e["name"] == match[2]}
+            groups = DB.exec({Int64, String}, "SELECT groups.id AS id, groups.name AS name FROM groups
+            INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
+            if idx = groups.index { |e| e["name"] == match[2] }
               DB.exec "DELETE groups WHERE id = $1", [groups[idx]["id"]]
               msg.reply "The user \"#{match[1]}\" has lost the group \"#{match[2]}\""
             else
@@ -38,8 +39,9 @@ module DashBot
         bot.on("PRIVMSG", message: /^!group ls (\w+)/) do |msg, match|
           match = match.as Regex::MatchData
           if user_exists? match[1]
-            groups = DB.exec({String}, "SELECT groups.name AS name FROM groups INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
-            groups = groups.map{|e| e["name"]}.join(", ")
+            groups = DB.exec({String}, "SELECT groups.name AS name FROM groups
+            INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
+            groups = groups.map { |e| e["name"] }.join(", ")
             msg.reply "User \"#{match[1]}\" has the groups : #{groups}"
           else
             msg.reply "User \"#{match[1]}\" is not registered"
