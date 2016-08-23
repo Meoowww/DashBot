@@ -1,6 +1,7 @@
 module DashBot
   module Plugins
     module UserCommands
+      extend self
       include Rights
       include Database
 
@@ -77,8 +78,6 @@ module DashBot
           end
         end
       end
-
-      extend self
     end
   end
 end

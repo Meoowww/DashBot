@@ -17,6 +17,7 @@ module DashBot
     Plugins::UserCommands.bind(bot)
     Plugins::AdminCommands.bind(bot)
     Plugins::Points.bind(bot)
+    Plugins::Messages.bind(bot)
 
     bot.connect.on_ready do
       bot.join([Irc::Chan.new("#equilibre")])

@@ -1,6 +1,7 @@
 module DashBot
   module Plugins
     module Points
+      extend self
       include Rights
 
       def bind(bot)
@@ -22,8 +23,6 @@ module DashBot
           end
         end
       end
-
-      extend self
     end
   end
 end

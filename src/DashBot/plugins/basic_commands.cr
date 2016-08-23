@@ -1,6 +1,8 @@
 module DashBot
   module Plugins
     module BasicCommands
+      extend self
+
       def bind(bot)
         bot.on("JOIN") do |msg|
           if msg.hl == bot.nick.to_s
@@ -21,7 +23,6 @@ module DashBot
           msg.reply "#{msg.hl}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
         end
       end
-      extend self
     end
   end
 end

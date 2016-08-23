@@ -1,6 +1,7 @@
 module DashBot
   module Plugins
     module AdminCommands
+      extend self
       include Rights
 
       def bind(bot)
@@ -11,7 +12,6 @@ module DashBot
           bot.kick([chan], [user], match.as(Regex::MatchData)[2]?)
         end
       end
-      extend self
     end
   end
 end
