@@ -21,15 +21,12 @@ module DashBot
           next if !authorize!(msg)
           match = match.as Regex::MatchData
           if user_exists? match[1]
-            DB["users"].find({"id" => match[1]}) do |e|
-              groups = e["groups"].as(BSON).decode.as(Array(BSON::Field))
-              if groups.includes? match[2]
-                groups.delete match[2]
-                DB["users"].update({"id" => match[1]}, {"$set" => { "groups" => groups}})
-                msg.reply "The user \"#{match[1]}\" has lost the group \"#{match[2]}\""
-              else
-                msg.reply "The user \"#{match[1]}\" does not belongs to the group \"#{match[2]}\""
-              end
+            groups = DB.exec({Int64, String}, "SELECT groups.id AS id, groups.name AS name FROM groups INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
+            if idx = groups.index{|e| e["name"] == match[2]}
+              DB.exec "DELETE groups WHERE id = $1", [groups[idx]["id"]]
+              msg.reply "The user \"#{match[1]}\" has lost the group \"#{match[2]}\""
+            else
+              msg.reply "The user \"#{match[1]}\" does not belongs to the group \"#{match[2]}\""
             end
           else
             msg.reply "User \"#{match[1]}\" not registered"
@@ -41,10 +38,9 @@ module DashBot
         bot.on("PRIVMSG", message: /^!group ls (\w+)/) do |msg, match|
           match = match.as Regex::MatchData
           if user_exists? match[1]
-            DB["users"].find({"id" => match[1]}) do |e|
-              groups = e["groups"].as(BSON).decode.as(Array(BSON::Field)).join(", ")
-              msg.reply "User \"#{match[1]}\" has the groups : #{groups}"
-            end
+            groups = DB.exec({String}, "SELECT groups.name AS name FROM groups INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
+            groups = groups.map{|e| e["name"]}.join(", ")
+            msg.reply "User \"#{match[1]}\" has the groups : #{groups}"
           else
             msg.reply "User \"#{match[1]}\" is not registered"
           end
@@ -56,11 +52,8 @@ module DashBot
           next if !authorize!(msg)
           match = match.as Regex::MatchData
           if user_exists? match[1]
-            DB["users"].find({"id" => match[1]}) do |e|
-              groups = e["groups"].as(BSON).decode.as(Array(BSON::Field)) << match[2]
-              DB["users"].update({"id" => match[1]}, {"$set" => { "groups" => groups}})
-              msg.reply "The user \"#{match[1]}\" has gained the group \"#{match[2]}\""
-            end
+            DB.exec "INSERT INTO groups (user_name, name) VALUES ($1, $2)", [match[1], match[2]]
+            msg.reply "The user \"#{match[1]}\" has gained the group \"#{match[2]}\""
           else
             msg.reply "User \"#{match[1]}\" not registered"
           end
@@ -73,11 +66,13 @@ module DashBot
             msg.reply "Cannot register \"#{msg.source_id}\" twice"
           else
             msg.reply "Register \"#{msg.source_id}\""
-            is_admin = DB["users"].count(Hash(String, String).new) == 0
-            DB["users"].insert({"id" => msg.source_id, "groups" => (is_admin ? ["admin"] : ["default"]) })
+            is_admin = DB.exec({Int64}, "SELECT COUNT(*) FROM users").to_hash[0]["count"] == 0
+            DB.exec "INSERT INTO users (name) VALUES ($1)", [msg.source_id]
+            DB.exec "INSERT INTO groups (user_name, name) VALUES ($1, $2)", [msg.source_id, "admin"] if is_admin
           end
         end
       end
+      #
     end
   end
 end

@@ -1,0 +1,7 @@
+#!/usr/bin/env crystal
+
+require "dotenv"
+Dotenv.load
+
+require "micrate"
+Micrate::Cli.run

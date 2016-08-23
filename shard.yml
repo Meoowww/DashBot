@@ -7,10 +7,19 @@ authors:
 license: MIT
 
 dependencies:
-  rollable:
-    github: Nephos/crystal_rollable
+  # irc
   CrystalIrc:
     github: Meoowww/CrystalIrc
     branch: master
-  mongo:
-    github: datanoise/mongo.cr
+  # dice roll
+  rollable:
+    github: Nephos/crystal_rollable
+  # Sql
+  pg:
+    github: will/crystal-pg
+  # database migrations
+  micrate:
+    github: juanedi/micrate
+  # .env file
+  dotenv:
+    github: gdotdesign/cr-dotenv

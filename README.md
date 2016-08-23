@@ -4,13 +4,21 @@ TODO: Write a description here
 
 ## Installation
 
-Install ``mongo``, ``mongoc``, ``crystal``, and ``crystal-shards``
+Install ``postgresql``, ``crystal``, and ``crystal-shards``
 
 ```sh
+# Clone
 git clone https://github.com/Nephos/DashBot
 cd DashBot
+# Install the libs
 crystal deps install
+# Build the project
 crystal b -s --release src/DashBot.cr
+# Configure the database
+psql -U postgres postgres -c "CREATE DATABASE dash_bot"
+echo "PG_URL=postgres://root:toor@localhost/dash_bot" > .env
+# Run the bot
+./DashBot
 ```
 
 

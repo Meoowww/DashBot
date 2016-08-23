@@ -4,9 +4,17 @@ shards:
     github: Meoowww/CrystalIrc
     commit: b8fdd5284f10304ec1f5525db5e7838bb445cde1
 
-  mongo:
-    github: datanoise/mongo.cr
-    commit: 36d095646f4cf99c5bc2964a9f55d2c76310cc03
+  dotenv:
+    github: gdotdesign/cr-dotenv
+    commit: 68702bfa0a3c7eda9aa448c36d2d68dcecce7677
+
+  micrate:
+    github: juanedi/micrate
+    version: 0.2.2
+
+  pg:
+    github: will/crystal-pg
+    version: 0.9.0
 
   rollable:
     github: Nephos/crystal_rollable

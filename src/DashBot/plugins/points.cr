@@ -7,20 +7,10 @@ module DashBot
       def bind(bot)
         bot.on("PRIVMSG", message: /^!p ([[:graph:]]+) ([[:graph:]]+)/) do |msg, match|
           match = match.as Regex::MatchData
-          hash = {"nick" => match[2], "type" => match[1].downcase} of String => String | Int32
-          STDERR.puts hash.inspect
-          n = DB["points"].count(hash)
-          if n > 0
-            DB["points"].find(hash) do |e|
-              count = e["count"].as(Int32)
-              DB["points"].update(hash, {"$set" => { "count" => count + 1}})
-              msg.reply "#{match[2]} has now #{count + 1} points #{match[1]}"
-            end
-          else
-            hash["count"] = 1
-            DB["points"].insert(hash)
-            msg.reply "#{match[2]} has now 1 point #{match[1]}"
-          end
+          DB.exec "INSERT INTO points (assigned_to, assigned_by, type, created_at)
+          VALUES ($1, $2, $3, NOW())", [match[2], msg.source_id, match[1].downcase]
+          n = DB.exec({Int64}, "SELECT COUNT(*) FROM points WHERE assigned_to = $1 AND type = $2", [match[2], match[1].downcase]).to_hash[0]["count"]
+          msg.reply "#{match[2]} has now #{n} point#{n > 1 ? "s" : ""} #{match[1]}"
         end
       end
     end

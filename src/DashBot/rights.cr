@@ -1,7 +1,10 @@
 module DashBot
   module Rights
     def authorized?(msg, group = "admin")
-      DB["users"].count({"id" => msg.source.to_s.source_id, "groups" => {"$elemMatch" => {"$eq" => group} } }) == 1
+      n = DB.exec({Int64}, "SELECT COUNT(*) FROM groups
+      INNER JOIN users ON groups.user_name = users.name WHERE groups.name = $1 AND users.name = $2",
+      [group, msg.source_id]).to_hash[0]["count"]
+      n == 1
     end
 
     def authorized?(msg, groups : Array(String))
