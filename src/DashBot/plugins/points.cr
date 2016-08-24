@@ -24,12 +24,12 @@ module DashBot
         bot.on("PRIVMSG", message: /^!pl ([[:graph:]]+)/) do |msg, match|
           match = match.as Regex::MatchData
           points = DB.exec({String, Int64}, "SELECT assigned_to, COUNT(*) FROM points WHERE type = $1 GROUP BY assigned_to ORDER BY COUNT(*) DESC LIMIT 5;", [match[1]]).to_hash
-          msg.reply "#{match[1]}: " + points.map{|point| "#{point["assigned_to"]}: #{point["count"]}" }.join(", ")
+          msg.reply "#{match[1]}: " + points.map { |point| "#{point["assigned_to"]}: #{point["count"]}" }.join(", ")
         end
         bot.on("PRIVMSG", message: /^!plu ([[:graph:]]+)/) do |msg, match|
           match = match.as Regex::MatchData
           points = DB.exec({String, Int64}, "SELECT type, COUNT(*) FROM points WHERE assigned_to = $1 GROUP BY type ORDER BY COUNT(*) DESC LIMIT 5;", [match[1]]).to_hash
-          msg.reply "#{match[1]}: " + points.map{|point| "#{point["type"]}: #{point["count"]}" }.join(", ")
+          msg.reply "#{match[1]}: " + points.map { |point| "#{point["type"]}: #{point["count"]}" }.join(", ")
         end
       end
       #

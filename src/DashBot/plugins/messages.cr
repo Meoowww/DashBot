@@ -1,4 +1,4 @@
-#TODO: Send private message to the sender
+# TODO: Send private message to the sender
 
 module DashBot
   module Plugins
@@ -19,7 +19,7 @@ module DashBot
           message = match.as(Regex::MatchData)[2]
           DB.exec "INSERT INTO messages (author, dest, content, created_at)
           VALUES ($1, $2, $3, NOW())", [msg.source_id, id, message]
-          #bot.privmsg User.new(msg.source_id), "Message sent to \"#{id}\""
+          # bot.privmsg User.new(msg.source_id), "Message sent to \"#{id}\""
           msg.reply "Message sent to \"#{id}\""
         end
       end
@@ -27,7 +27,7 @@ module DashBot
       def bind_read(bot)
         bot.on("PRIVMSG", message: /^!read$/) do |msg, match|
           l = DB.exec("SELECT * FROM messages WHERE read_at IS NULL AND dest = $1 ORDER BY created_at ASC LIMIT 1", [msg.source_id]).to_hash
-          #user = User.new(msg.source_id)
+          # user = User.new(msg.source_id)
           if l.size == 1
             l = l[0]
             date = l["created_at"].as Time

@@ -20,7 +20,7 @@ module DashBot
     Plugins::Messages.bind(bot)
 
     bot.connect.on_ready do
-      bot.join([Irc::Chan.new("#equilibre")])
+      bot.join (ARGV || ["#equilibre"]).map { |chan| Irc::Chan.new(chan) }
     end
 
     loop do
