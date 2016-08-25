@@ -18,6 +18,8 @@ crystal b -s --release src/DashBot.cr
 psql -U postgres postgres -c "CREATE USER root WITH PASSWORD 'toor' SUPERUSER;"
 psql -U postgres postgres -c "CREATE DATABASE dash_bot"
 echo "PG_URL=postgres://root:toor@localhost/dash_bot" > .env
+# Update the database
+./bin/micrate up
 # Run the bot
 ./DashBot
 ```
