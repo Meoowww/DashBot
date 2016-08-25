@@ -14,6 +14,15 @@ module DashBot
         bot.on("PRIVMSG", message: /^!rroll (.+) (.+)/) do |msg|
           msg_match = msg.message.to_s.match(/^!rroll (.+) (.+)/)
           next if msg_match.nil?
+
+          # Check for roll correctness
+          begin
+            r = Rollable::Roll.parse(msg_match[2]).compact!.order!
+          rescue
+            msg.reply "#{msg_match[2]} is not a correct roll."
+            next
+          end
+
           # check if name already exists
           n = DB.exec({Int64}, "SELECT COUNT(*) FROM dice WHERE owner = $1 AND name = $2",
           [msg_match[1], msg.source_id]).to_hash[0]["count"]
@@ -22,6 +31,7 @@ module DashBot
             next
           end
 
+          # Insert new roll
           DB.exec "INSERT INTO dice (owner, name, roll, created_at)
           VALUES ($1, $2, $3, NOW())", [msg_match[1], msg.source_id, msg_match[2]]
 
