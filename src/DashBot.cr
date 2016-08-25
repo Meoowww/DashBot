@@ -18,6 +18,7 @@ module DashBot
     Plugins::AdminCommands.bind(bot)
     Plugins::Points.bind(bot)
     Plugins::Messages.bind(bot)
+    Plugins::Rpg.bind(bot)
 
     bot.connect.on_ready do
       bot.join (ARGV || ["#equilibre"]).map { |chan| Irc::Chan.new(chan) }
