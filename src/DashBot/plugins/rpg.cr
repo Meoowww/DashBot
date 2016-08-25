@@ -62,6 +62,32 @@ module DashBot
       end
 
       def bind_list_roll(bot)
+        bot.on("PRIVMSG", message: /^!lroll (.+)/) do |msg|
+          msg_match = msg.message.to_s.match(/^!lroll (.+)/)
+          next if msg_match.nil?
+
+          res = DB.exec({String}, "SELECT roll FROM dice WHERE name = $1 AND owner = $2",
+          [msg_match[1], msg.source_id]).to_hash[0]["roll"]
+          if res.nil?
+            msg.reply "Roll #{msg_match[1]} does not exist."
+            next
+          end
+
+          msg.reply "#{msg_match[1]} is registered as #{res}."
+        end
+
+        bot.on("PRIVMSG", message: /^!lroll/) do |msg|
+          # Do not trigger if the user was asking for a specific dice
+          msg_match = msg.message.to_s.match(/^!lroll (.+)/)
+          next if msg_match.nil?
+          next if !msg_match[1].nil?
+
+          res = DB.exec({String, String}, "SELECT name, roll FROM dice WHERE owner = $1",
+          [msg.source_id]).to_hash
+
+          msg.reply "#{msg.source_id} has registered the following dies: " + res.map { |dice| "#{dice["name"]}: #{dice["roll"]}" }.join(", ")
+        end
+
       end
 
       def bind_launch_roll(bot)
