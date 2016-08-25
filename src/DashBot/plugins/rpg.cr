@@ -32,6 +32,7 @@ module DashBot
           # check if name already exists
           n = DB.exec({Int64}, "SELECT COUNT(*) FROM dies WHERE name = $1 AND owner = $2",
           [msg_match[1], msg.source_id]).to_hash[0]["count"]
+
           if n > 0
             msg.reply "Error: #{msg_match[1]} already exists. Remove it or use another name."
             next
@@ -53,6 +54,7 @@ module DashBot
           # Check if roll is in database
           n = DB.exec({Int64}, "SELECT COUNT(*) FROM dies WHERE name = $1 AND owner = $2",
           [msg_match[1], msg.source_id]).to_hash[0]["count"]
+
           if n == 0
             msg.reply "Error: #{msg_match[1]} doesn't exist."
             next
@@ -73,6 +75,7 @@ module DashBot
 
           res = DB.exec({String}, "SELECT roll FROM dies WHERE name = $1 AND owner = $2",
           [msg_match[1], msg.source_id]).to_hash[0]["roll"]
+
           if res.nil?
             msg.reply "Roll #{msg_match[1]} does not exist."
             next
@@ -91,7 +94,6 @@ module DashBot
 
           msg.reply "#{msg.source_id} has registered the following dies: " + res.map { |dies| "#{dies["name"]}: #{dies["roll"]}" }.join(", ")
         end
-
       end
 
       def bind_launch_roll(bot)
