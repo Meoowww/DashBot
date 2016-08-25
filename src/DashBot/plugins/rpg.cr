@@ -26,7 +26,7 @@ module DashBot
 
           # check if name already exists
           n = DB.exec({Int64}, "SELECT COUNT(*) FROM dice WHERE name = $1 AND owner = $2",
-          [msg_match[1], msg.source_id]).to_hash[0]["count"]
+            [msg_match[1], msg.source_id]).to_hash[0]["count"]
           if n > 0
             msg.reply "Error: #{msg_match[1]} already exists. Remove it or use another name."
             next
@@ -47,7 +47,7 @@ module DashBot
 
           # Check if roll is in database
           n = DB.exec({Int64}, "SELECT COUNT(*) FROM dice WHERE name = $1 AND owner = $2",
-          [msg_match[1], msg.source_id]).to_hash[0]["count"]
+            [msg_match[1], msg.source_id]).to_hash[0]["count"]
           if n == 0
             msg.reply "Error: #{msg_match[1]} doesn't exist."
             next
@@ -55,7 +55,7 @@ module DashBot
 
           # Delete it
           DB.exec("DELETE FROM dice WHERE name = $1 AND owner = $2",
-          [msg_match[1], msg.source_id])
+            [msg_match[1], msg.source_id])
 
           msg.reply "Roll #{msg_match[1]} successfully deleted."
         end
@@ -67,7 +67,7 @@ module DashBot
           next if msg_match.nil?
 
           res = DB.exec({String}, "SELECT roll FROM dice WHERE name = $1 AND owner = $2",
-          [msg_match[1], msg.source_id]).to_hash[0]["roll"]
+            [msg_match[1], msg.source_id]).to_hash[0]["roll"]
           if res.nil?
             msg.reply "Roll #{msg_match[1]} does not exist."
             next
@@ -82,11 +82,10 @@ module DashBot
           next if !msg_match.nil?
 
           res = DB.exec({String, String}, "SELECT name, roll FROM dice WHERE owner = $1",
-          [msg.source_id]).to_hash
+            [msg.source_id]).to_hash
 
           msg.reply "#{msg.source_id} has registered the following dies: " + res.map { |dice| "#{dice["name"]}: #{dice["roll"]}" }.join(", ")
         end
-
       end
 
       def bind_launch_roll(bot)
@@ -97,7 +96,7 @@ module DashBot
           next if msg_match.size > 2
 
           roll = DB.exec({String}, "SELECT roll FROM dice WHERE name = $1 AND owner = $2",
-          [msg_match[1], msg.source_id]).to_hash[0]["roll"]
+            [msg_match[1], msg.source_id]).to_hash[0]["roll"]
 
           if roll.nil?
             msg.reply "Roll #{msg_match[1]} does not exist."
@@ -109,7 +108,6 @@ module DashBot
           msg.reply "#{msg.hl}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
         end
       end
-
     end
   end
 end
