@@ -84,9 +84,9 @@ module DashBot
           msg.reply "#{msg_match[1]} is registered as #{res}."
         end
 
-        bot.on("PRIVMSG", message: /^!lroll/) do |msg, match|
+        bot.on("PRIVMSG", message: /^!lroll/) do |msg|
           # Do not trigger if the user was asking for a specific dice
-          msg_match = match.as Regex::MatchData
+          msg_match = msg.message.to_s.match(/^!lroll (.+)/)
           next if !msg_match.nil?
 
           res = DB.exec({String, String}, "SELECT name, roll FROM dies WHERE owner = $1",
@@ -131,9 +131,42 @@ module DashBot
       end
 
       def bind_del_music(bot)
+        bot.on("PRIVMSG", message: /^!music delete (.+) (.+)/) do |msg, match|
+          msg_match = match.as Regex::MatchData
+          next if msg_match.nil?
+
+          musics = DB.exec({String}, "SELECT url FROM musics WHERE category = $1",
+          [msg_match[1]]).to_hash
+
+          if msg_match[2].to_i > musics.size
+            msg.reply "This music doesn't exist."
+            next
+          end
+
+          DB.exec("DELETE FROM musics WHERE url = $1",
+          [musics[msg_match[2].to_i - 1]["url"]])
+          msg.reply "Music successfully deleted."
+        end
       end
 
       def bind_list_music(bot)
+        bot.on("PRIVMSG", message: /^!music list/) do |msg|
+          # Do not trigger if the user was asking for a specific category
+          msg_match = msg.message.to_s.match(/^!music list (.+)/)
+          next if !msg_match.nil?
+
+          res = DB.exec({String}, "SELECT DISTINCT category FROM musics").to_hash
+          msg.reply "The following music categories exist: " + res.map { |music| "#{music["category"]}" }.join(", ")
+        end
+
+        bot.on("PRIVMSG", message: /^!music list (.+)/) do |msg, match|
+          msg_match = match.as Regex::MatchData
+          next if msg_match.nil?
+
+          res = DB.exec({String}, "SELECT url FROM musics WHERE category = $1 LIMIT 5",
+          [msg_match[1]]).to_hash
+          msg.reply "The following musics are present in the category #{msg_match[1]}: " + res.map { |music| "#{music["url"]}" }.join(", ")
+        end
       end
 
       def bind_link_music(bot)
