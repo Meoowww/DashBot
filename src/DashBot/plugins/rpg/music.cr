@@ -41,7 +41,7 @@ module DashBot::Plugins::Rpg::Music
       msg.reply "The following music categories exist: #{categories}"
     end
 
-    bot.on("PRIVMSG", message: /^!music list ([[:graph:]]+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!music (?:list|ls) ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
       urls = DB.exec({String}, "SELECT url FROM musics WHERE category = $1 LIMIT 5",
         [msg_match[1]]).to_hash.map { |music| "#{music["url"]}" }.join(", ")

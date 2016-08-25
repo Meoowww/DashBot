@@ -34,7 +34,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_group_ls(bot)
-    bot.on("PRIVMSG", message: /^!group ls (\w+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!group (?:list|ls) (\w+)/) do |msg, match|
       match = match.as Regex::MatchData
       if user_exists? match[1]
         groups = DB.exec({String}, "SELECT groups.name AS name FROM groups
