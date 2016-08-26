@@ -21,7 +21,7 @@ module DashBot
     Plugins::Rpg.bind(bot)
 
     bot.connect.on_ready do
-      bot.join (ARGV || ["#equilibre"]).map { |chan| Irc::Chan.new(chan) }
+      bot.join (ARGV.empty? ? ["#equilibre"] : ARGV).map { |chan| Irc::Chan.new(chan) }
     end
 
     loop do
