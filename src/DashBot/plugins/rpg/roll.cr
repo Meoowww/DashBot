@@ -7,6 +7,7 @@ module DashBot::Plugins::Rpg::Roll
     bind_del_roll bot
     bind_list_roll bot
     bind_launch_roll bot
+    bind_group_launch_roll bot
   end
 
   def bind_add_roll(bot)
@@ -50,6 +51,23 @@ module DashBot::Plugins::Rpg::Roll
       r = Rollable::Roll.parse(roll).compact!.order!
       result = r.test_details
       msg.reply "#{msg.hl}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
+    end
+  end
+
+  def bind_group_launch_roll(bot)
+    bot.on("PRIVMSG", message: /^!groll ([[:graph:]]+)(?: (\d+))? *$/) do |msg, match|
+      match = match.as Regex::MatchData
+      limit = match[2]? || "8"
+      all_rolls = DB.exec({String, String}, "SELECT owner, roll FROM dies WHERE name = $1",
+        [match[1]]).to_hash
+
+      rolls = all_rolls.shift(limit.to_i)
+      msg.reply "#{all_rolls.size} rolls will not be launch." if !all_rolls.empty?
+      rolls.each do |e|
+        r = Rollable::Roll.parse(e["roll"]).compact!.order!
+        result = r.test_details
+        msg.reply "#{e["owner"]}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
+      end
     end
   end
 
