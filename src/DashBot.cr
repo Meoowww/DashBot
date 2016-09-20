@@ -40,4 +40,12 @@ module DashBot
   extend self
 end
 
-DashBot.start
+loop do
+  begin
+    DashBot.start
+  rescue err
+    STDERR.puts err
+    STDOUT.puts err
+    sleep 1
+  end
+end

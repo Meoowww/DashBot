@@ -2,7 +2,7 @@ version: 1.0
 shards:
   CrystalIrc:
     github: Meoowww/CrystalIrc
-    commit: e32248b3117c5a4439f7eef846e923150f0b1a65
+    commit: c2c9102c66dcea3bfad197fc76ad6a57b0dc1bcd
 
   dotenv:
     github: gdotdesign/cr-dotenv
@@ -14,7 +14,7 @@ shards:
 
   pg:
     github: will/crystal-pg
-    version: 0.9.1
+    version: 0.11.0
 
   rollable:
     github: Nephos/crystal_rollable
