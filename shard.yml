@@ -23,3 +23,6 @@ dependencies:
   # .env file
   dotenv:
     github: gdotdesign/cr-dotenv
+  # --daemonize
+  daemonize:
+    github: DougEverly/daemonize.cr

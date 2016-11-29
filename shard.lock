@@ -4,6 +4,10 @@ shards:
     github: Meoowww/CrystalIrc
     commit: c2c9102c66dcea3bfad197fc76ad6a57b0dc1bcd
 
+  daemonize:
+    github: DougEverly/daemonize.cr
+    commit: 03d7da27fe76ee6b77d47a66984969a308a42027
+
   dotenv:
     github: gdotdesign/cr-dotenv
     commit: 68702bfa0a3c7eda9aa448c36d2d68dcecce7677
