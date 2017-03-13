@@ -10,6 +10,7 @@ module DashBot::Plugins::Rpg::Roll
     bind_group_launch_roll bot
   end
 
+  # !rroll NAME DICE = prepare a new dice named NAME
   def bind_add_roll(bot)
     bot.on("PRIVMSG", message: /^!rroll ([[:graph:]]+) ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
@@ -36,6 +37,7 @@ module DashBot::Plugins::Rpg::Roll
     end
   end
 
+  # !rrol NAME = roll the dice named NAME
   def bind_launch_roll(bot)
     bot.on("PRIVMSG", message: /^!rroll ([[:graph:]]+) *$/) do |msg, match|
       # Do not trigger if the user was registering a roll
@@ -54,6 +56,7 @@ module DashBot::Plugins::Rpg::Roll
     end
   end
 
+  # !groll NAME MAX = roll the dice from everyone (limited by MAX)
   def bind_group_launch_roll(bot)
     bot.on("PRIVMSG", message: /^!groll ([[:graph:]]+)(?: (\d+))? *$/) do |msg, match|
       match = match.as Regex::MatchData
@@ -71,6 +74,7 @@ module DashBot::Plugins::Rpg::Roll
     end
   end
 
+  # !droll NAME = remove the dice
   def bind_del_roll(bot)
     bot.on("PRIVMSG", message: /^!droll ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
@@ -88,6 +92,7 @@ module DashBot::Plugins::Rpg::Roll
     end
   end
 
+  # !lroll OWNER?
   def bind_list_roll(bot)
     bot.on("PRIVMSG", message: /^!lroll ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
