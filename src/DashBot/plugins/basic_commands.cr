@@ -1,7 +1,7 @@
 module DashBot::Plugins::BasicCommands
   extend self
 
-  WHAT = %w(ce que tu dis n'a aucun sens)
+  WHAT = %w(ce que tu dis n a aucun sens)
 
   def bind(bot)
     bot.on("JOIN") do |msg|

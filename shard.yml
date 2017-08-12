@@ -17,6 +17,9 @@ dependencies:
   # Sql
   pg:
     github: will/crystal-pg
+  # db:
+  #   github: Nephos/crystal-db
+  #   branch: feature/namedtuple-for-query
   # database migrations
   micrate:
     github: juanedi/micrate

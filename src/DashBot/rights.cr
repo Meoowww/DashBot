@@ -1,9 +1,9 @@
 module DashBot
   module Rights
     def authorized?(msg, group = "admin")
-      n = DB.exec({Int64}, "SELECT COUNT(*) FROM groups
+      n = DB.query_one("SELECT COUNT(*) FROM groups
       INNER JOIN users ON groups.user_name = users.name WHERE groups.name = $1 AND users.name = $2",
-        [group, msg.source_id]).to_hash[0]["count"]
+        [group, msg.source_id], as: {Int64})
       n == 1
     end
 

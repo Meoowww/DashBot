@@ -21,8 +21,7 @@ module DashBot::Plugins::Rpg::Music
   def bind_del_music(bot)
     bot.on("PRIVMSG", message: /^!music delete ([[:graph:]]+) ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
-      musics = DB.exec({String}, "SELECT url FROM musics WHERE category = $1",
-        [msg_match[1]]).to_hash
+      musics = DB.query_all("SELECT url FROM musics WHERE category = $1", [msg_match[1]], as: {String})
 
       if msg_match[2].to_i > musics.size
         msg.reply "This music doesn't exist."
@@ -36,15 +35,13 @@ module DashBot::Plugins::Rpg::Music
   def bind_list_music(bot)
     bot.on("PRIVMSG", message: /^!music (?:list|ls) *$/) do |msg|
       # Do not trigger if the user was asking for a specific category
-      categories = DB.exec({String}, "SELECT DISTINCT category FROM musics")
-                     .to_hash.map { |music| "#{music["category"]}" }.join(", ")
+      categories = DB.query_all("SELECT DISTINCT category FROM musics", as: {String}).join(", ")
       msg.reply "The following music categories exist: #{categories}"
     end
 
     bot.on("PRIVMSG", message: /^!music (?:list|ls) ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
-      urls = DB.exec({String}, "SELECT url FROM musics WHERE category = $1 LIMIT 5",
-        [msg_match[1]]).to_hash.map { |music| "#{music["url"]}" }.join(", ")
+      urls = DB.query_all("SELECT url FROM musics WHERE category = $1 LIMIT 5", [msg_match[1]], as: {String}).join(", ")
       msg.reply "The following musics are present in the category #{msg_match[1]}: #{urls}"
     end
   end
@@ -53,18 +50,18 @@ module DashBot::Plugins::Rpg::Music
     # Select a random music
     bot.on("PRIVMSG", message: /^!music play ([[:graph:]]+) *$/) do |msg, match|
       msg_match = match.as Regex::MatchData
-      musics = DB.exec({String}, "SELECT url FROM musics WHERE category = $1", [msg_match[1]]).to_hash
-      msg.reply "#{musics.sample["url"]}"
+      musics = DB.query_all("SELECT url FROM musics WHERE category = $1", [msg_match[1]], as: {String})
+      msg.reply "#{musics.sample}"
     end
 
     # Select a specific music
     bot.on("PRIVMSG", message: /^!music play ([[:graph:]]+) ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
-      musics = DB.exec({String}, "SELECT url FROM musics WHERE category = $1", [msg_match[1]]).to_hash
+      musics = DB.query_all("SELECT url FROM musics WHERE category = $1", [msg_match[1]], as: {String})
       if msg_match[2].to_i > musics.size
         msg.reply "Error: this track doesn't exist (yet)."
       else
-        msg.reply "#{musics[msg_match[2].to_i - 1]["url"]}"
+        msg.reply "#{musics[msg_match[2].to_i - 1]}"
       end
     end
   end

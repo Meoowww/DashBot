@@ -24,8 +24,8 @@ module DashBot::Plugins::Rpg::Roll
       end
 
       # check if name already exists
-      n = DB.exec({Int64}, "SELECT COUNT(*) FROM dies WHERE name = $1 AND owner = $2",
-        [msg_match[1], msg.source_id]).to_hash[0]["count"]
+      n = DB.query_one("SELECT COUNT(*) FROM dies WHERE name = $1 AND owner = $2",
+        [msg_match[1], msg.source_id], as: {Int64})
 
       if n > 0
         msg.reply "Error: #{msg_match[1]} already exists. Remove it or use another name."
@@ -43,8 +43,8 @@ module DashBot::Plugins::Rpg::Roll
       # Do not trigger if the user was registering a roll
       msg_match = match.as Regex::MatchData
       begin
-        roll = DB.exec({String}, "SELECT roll FROM dies WHERE name = $1 AND owner = $2",
-          [msg_match[1], msg.source_id]).to_hash[0]["roll"]
+        roll = DB.query_one("SELECT roll FROM dies WHERE name = $1 AND owner = $2",
+          [msg_match[1], msg.source_id], as: {String})
       rescue
         msg.reply "Roll #{msg_match[1]} does not exist."
         next
@@ -60,16 +60,16 @@ module DashBot::Plugins::Rpg::Roll
   def bind_group_launch_roll(bot)
     bot.on("PRIVMSG", message: /^!groll ([[:graph:]]+)(?: (\d+))? *$/) do |msg, match|
       match = match.as Regex::MatchData
-      limit = match[2]? || "8"
-      all_rolls = DB.exec({String, String}, "SELECT owner, roll FROM dies WHERE name = $1",
-        [match[1]]).to_hash
+      limit = (match[2]? || "8").to_i
+      all_rolls = DB.query_all("SELECT owner, roll FROM dies WHERE name = $1",
+        [match[1]], as: {String, String})
 
-      rolls = all_rolls.shift(limit.to_i)
+      rolls = all_rolls.shift(limit)
       msg.reply "#{all_rolls.size} rolls will not be launch." if !all_rolls.empty?
       rolls.each do |e|
-        r = Rollable::Roll.parse(e["roll"]).compact!.order!
+        r = Rollable::Roll.parse(e[1]).compact!.order!
         result = r.test_details
-        msg.reply "#{e["owner"]}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
+        msg.reply "#{e[0]}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
       end
     end
   end
@@ -79,8 +79,8 @@ module DashBot::Plugins::Rpg::Roll
     bot.on("PRIVMSG", message: /^!droll ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
       # Check if roll is in database
-      n = DB.exec({Int64}, "SELECT COUNT(*) FROM dies WHERE name = $1 AND owner = $2",
-        [msg_match[1], msg.source_id]).to_hash[0]["count"]
+      n = DB.query_one("SELECT COUNT(*) FROM dies WHERE name = $1 AND owner = $2",
+        [msg_match[1], msg.source_id], as: {Int64})
 
       if n == 0
         msg.reply "Error: #{msg_match[1]} doesn't exist."
@@ -96,8 +96,8 @@ module DashBot::Plugins::Rpg::Roll
   def bind_list_roll(bot)
     bot.on("PRIVMSG", message: /^!lroll ([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
-      res = DB.exec({String}, "SELECT roll FROM dies WHERE name = $1 AND owner = $2",
-        [msg_match[1], msg.source_id]).to_hash[0]["roll"]
+      res = DB.query_one("SELECT roll FROM dies WHERE name = $1 AND owner = $2",
+        [msg_match[1], msg.source_id], as: {String})
 
       if res.nil?
         msg.reply "Roll #{msg_match[1]} does not exist."
@@ -108,8 +108,8 @@ module DashBot::Plugins::Rpg::Roll
 
     bot.on("PRIVMSG", message: /^!lroll *$/) do |msg|
       # Do not trigger if the user was asking for a specific dice
-      rolls = DB.exec({String, String}, "SELECT name, roll FROM dies WHERE owner = $1",
-        [msg.source_id]).to_hash.map { |dies| "#{dies["name"]}: #{dies["roll"]}" }.join(", ")
+      rolls = DB.query_all("SELECT name, roll FROM dies WHERE owner = $1",
+        [msg.source_id], as: {String, String}).map { |dies| "#{dies[0]}: #{dies[1]}" }.join(", ")
       msg.reply "#{msg.source_id} has registered the following dies: #{rolls}"
     end
   end

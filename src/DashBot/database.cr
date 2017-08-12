@@ -11,7 +11,7 @@ module DashBot
     extend self
 
     def user_exists?(name)
-      n = DB.exec({Int64}, "SELECT COUNT(*) AS count FROM users WHERE name=$1", [name]).to_hash[0]["count"]
+      n = DB.query_one("SELECT COUNT(*) AS count FROM users WHERE name=$1", [name], as: {Int64})
       raise "User \"#{name}\" registered #{n} times !!" if n > 1
       n == 1
     end

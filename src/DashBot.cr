@@ -12,7 +12,7 @@ end
 module DashBot
   def start
     Arguments.new.use
-    bot = CrystalIrc::Bot.new ip: "irc.mozilla.org", nick: "Dasshy", read_timeout: 300_u16
+    bot = CrystalIrc::Bot.new ip: "irc.mozilla.org", port: 6667_u16, ssl: false, nick: "Dasshyx", read_timeout: 300_u16
 
     Plugins::BasicCommands.bind(bot)
     Plugins::UserCommands.bind(bot)

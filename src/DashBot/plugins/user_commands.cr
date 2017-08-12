@@ -19,10 +19,10 @@ module DashBot::Plugins::UserCommands
       next if !authorize!(msg)
       match = match.as Regex::MatchData
       if user_exists? match[1]
-        groups = DB.exec({Int64, String}, "SELECT groups.id AS id, groups.name AS name FROM groups
-        INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
-        if idx = groups.index { |e| e["name"] == match[2] }
-          DB.exec "DELETE groups WHERE id = $1", [groups[idx]["id"]]
+        groups = DB.query_all("SELECT groups.id AS id, groups.name AS name FROM groups
+        INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]], as: {Int32, String})
+        if idx = groups.index { |e| e[1] == match[2] }
+          DB.exec "DELETE FROM groups WHERE id = $1", [groups[idx][0]]
           msg.reply "The user \"#{match[1]}\" has lost the group \"#{match[2]}\""
         else
           msg.reply "The user \"#{match[1]}\" does not belongs to the group \"#{match[2]}\""
@@ -37,9 +37,9 @@ module DashBot::Plugins::UserCommands
     bot.on("PRIVMSG", message: /^!group (?:list|ls) (\w+)/) do |msg, match|
       match = match.as Regex::MatchData
       if user_exists? match[1]
-        groups = DB.exec({String}, "SELECT groups.name AS name FROM groups
-        INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]]).to_hash
-        groups = groups.map { |e| e["name"] }.join(", ")
+        groups = DB.query_all("SELECT groups.name AS name FROM groups
+        INNER JOIN users ON groups.user_name = users.name WHERE users.name = $1", [match[1]], as: {String})
+        groups = groups.join(", ")
         msg.reply "User \"#{match[1]}\" has the groups : #{groups}"
       else
         msg.reply "User \"#{match[1]}\" is not registered"
@@ -66,7 +66,7 @@ module DashBot::Plugins::UserCommands
         msg.reply "Cannot register \"#{msg.source_id}\" twice"
       else
         msg.reply "Register \"#{msg.source_id}\""
-        is_admin = DB.exec({Int64}, "SELECT COUNT(*) FROM users").to_hash[0]["count"] == 0
+        is_admin = DB.query_one("SELECT COUNT(*) FROM users", [] of Int64, as: {Int64}) == 0
         DB.exec "INSERT INTO users (name) VALUES ($1)", [msg.source_id]
         DB.exec "INSERT INTO groups (user_name, name) VALUES ($1, $2)", [msg.source_id, is_admin ? "admin" : "default"]
       end

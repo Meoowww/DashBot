@@ -1,7 +1,10 @@
 #!/usr/bin/env crystal
 
 require "dotenv"
+require "micrate"
+require "pg"
+
 Dotenv.load
 
-require "micrate"
+Micrate::DB.connection_url = ENV["PG_URL"]
 Micrate::Cli.run
