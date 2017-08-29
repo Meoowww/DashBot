@@ -10,7 +10,7 @@ dependencies:
   # irc
   CrystalIrc:
     github: Meoowww/CrystalIrc
-    branch: master
+    branch: develop
   # dice roll
   rollable:
     github: Nephos/crystal_rollable

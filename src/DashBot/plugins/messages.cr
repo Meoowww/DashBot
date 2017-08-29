@@ -24,21 +24,20 @@ module DashBot::Plugins::Messages
 
   def bind_read(bot)
     bot.on("PRIVMSG", message: /^!read$/) do |msg, match|
-      messages = DB.query_all(
+      m = DB.query_one(
         "SELECT id, author, dest, content, created_at, read_at FROM messages WHERE read_at IS NULL AND dest = $1
-         ORDER BY created_at ASC LIMIT 1", [msg.source_id], as: {Int64, String, String, String, Time, Time})
-      messages = messages.map { |m| {id: m[0], author: m[1], dest: m[2], content: m[3], created_at: m[4], read_at: m[5]} }
-      # user = User.new(msg.source_id)
-      if messages.size == 1
-        l = messages[0]
-        date = l[:created_at].as Time
+         ORDER BY created_at ASC LIMIT 1", [msg.source_id], as: {Int32, String, String, String, Time, Time?}) rescue nil
+      if m
+        message = {id: m[0], author: m[1], dest: m[2], content: m[3], created_at: m[4], read_at: m[5]}
+        # user = User.new(msg.source_id)
+        date = message[:created_at]
         if Time.now.to_s("%j") == date.to_s("%j")
           date = date.to_s("%H:%M:%S")
         else
           date = date.to_s("%B, %d at %H:%M:%S")
         end
-        DB.exec "UPDATE messages SET read_at = NOW() WHERE id = $1", {l[:id]}
-        msg.reply "#{date} -- #{l["author"]} -- #{l["content"]}"
+        msg.reply "#{date} -- #{message[:author]} -- #{message[:content]}"
+        DB.exec "UPDATE messages SET read_at = NOW() WHERE id = $1", [message[:id]]
       else
         msg.reply "No message in the mailbox"
       end

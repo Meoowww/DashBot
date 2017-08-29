@@ -2,7 +2,7 @@ version: 1.0
 shards:
   CrystalIrc:
     github: Meoowww/CrystalIrc
-    commit: 30a8fa2b15ef9fc48ff781598a6081492204ab5c
+    commit: b6742edf45733ad4fe0ba9fa774799094c1ac8e3
 
   daemonize:
     github: DougEverly/daemonize.cr
