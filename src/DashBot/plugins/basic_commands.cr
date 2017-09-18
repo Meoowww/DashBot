@@ -23,7 +23,7 @@ module DashBot::Plugins::BasicCommands
     end.on("PRIVMSG", message: /^!call *(.+)/) do |msg, match|
       match = match.as Regex::MatchData
       msg.reply "I'm calling #{match[1]} right now"
-    end.on("PRIVMSG", message: /(^| )what($| )/) do |msg, match|
+    end.on("PRIVMSG", message: /(^| )what($| )/i) do |msg, match|
       msg.reply WHAT.shuffle.join(" ")
     end
   end
