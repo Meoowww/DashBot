@@ -1,4 +1,4 @@
-NAME=`ls src/*/ -d | cut -f2 -d'/'`
+NAME=`ls -d src/*/ | cut -f2 -d'/'`
 
 all: deps_opt build
 
