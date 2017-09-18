@@ -8,7 +8,7 @@ module DashBot::Plugins::Points
   end
 
   def bind_add(bot)
-    bot.on("PRIVMSG", message: /^!p ([[:graph:]]+) ([[:graph:]]+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!p *([[:graph:]]+) *([[:graph:]]+)/) do |msg, match|
       match = match.as Regex::MatchData
       DB.exec "INSERT INTO points (assigned_to, assigned_by, type, created_at)
       VALUES ($1, $2, $3, NOW())", [match[2], msg.source_id, match[1].downcase]
@@ -19,12 +19,12 @@ module DashBot::Plugins::Points
   end
 
   def bind_list(bot)
-    bot.on("PRIVMSG", message: /^!pl ([[:graph:]]+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!pl *([[:graph:]]+)/) do |msg, match|
       match = match.as Regex::MatchData
       points = DB.query_all("SELECT assigned_to, COUNT(*) FROM points WHERE type = $1 GROUP BY assigned_to ORDER BY COUNT(*) DESC LIMIT 5;", [match[1]], as: {String, Int64})
       msg.reply "#{match[1]}: " + points.map { |point| "#{point[0]}: #{point[1]}" }.join(", ")
     end
-    bot.on("PRIVMSG", message: /^!plu ([[:graph:]]+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!plu *([[:graph:]]+)/) do |msg, match|
       match = match.as Regex::MatchData
       points = DB.query_all("SELECT type, COUNT(*) FROM points WHERE assigned_to = $1 GROUP BY type ORDER BY COUNT(*) DESC LIMIT 5;", [match[1]], as: {String, Int64})
       msg.reply "#{match[1]}: " + points.map { |point| "#{point[0]}: #{point[1]}" }.join(", ")
