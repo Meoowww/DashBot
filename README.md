@@ -46,3 +46,4 @@ TODO: Write development instructions here
 ## Contributors
 
 - [pouleta](https://github.com/Nephos) Arthur Poulet - creator, maintainer
+- [Lucie](https://github.com/Lucie-Dispot) Lucie Dispot - developer
