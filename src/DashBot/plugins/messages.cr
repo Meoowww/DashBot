@@ -12,7 +12,7 @@ module DashBot::Plugins::Messages
   end
 
   def bind_write(bot)
-    bot.on("PRIVMSG", message: /^!write (\w+) (.+)$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!write *(\w+) *(.+)$/) do |msg, match|
       id = match.as(Regex::MatchData)[1]
       message = match.as(Regex::MatchData)[2]
       DB.exec "INSERT INTO messages (author, dest, content, created_at)
@@ -50,5 +50,4 @@ module DashBot::Plugins::Messages
       msg.reply "#{msg.source_id}, you have #{count} messages" if count > 0
     end
   end
-  #
 end

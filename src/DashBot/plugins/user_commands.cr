@@ -15,7 +15,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_group_rm(bot)
-    bot.on("PRIVMSG", message: /^!group rm (\w+) (\w+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!group *rm *(\w+) *(\w+)/) do |msg, match|
       next if !authorize!(msg)
       match = match.as Regex::MatchData
       if user_exists? match[1]
@@ -34,7 +34,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_group_ls(bot)
-    bot.on("PRIVMSG", message: /^!group (?:list|ls) (\w+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!group *(?:list|ls) (\w+)/) do |msg, match|
       match = match.as Regex::MatchData
       if user_exists? match[1]
         groups = DB.query_all("SELECT groups.name AS name FROM groups
@@ -48,7 +48,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_group_add(bot)
-    bot.on("PRIVMSG", message: /^!group add (\w+) (\w+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!group *add *(\w+) *(\w+)/) do |msg, match|
       next if !authorize!(msg)
       match = match.as Regex::MatchData
       if user_exists? match[1]
@@ -72,5 +72,4 @@ module DashBot::Plugins::UserCommands
       end
     end
   end
-  #
 end
