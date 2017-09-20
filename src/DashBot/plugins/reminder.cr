@@ -12,28 +12,9 @@ module DashBot::Plugins::Reminder
     bind_signal bot
   end
 
-  def wordToDate(txt)
-    date = txt.split("/")
-    time = Time.now()
-    if date.size == 1
-      date = txt.split("h")
-      m = 0
-      if date.size == 2 && date[1].size > 0
-        m = date[1].to_i32
-      end
-      Time.new(time.year, time.month, time.day, date[0].to_i32, m, 0, 0, Time::Kind::Local).to_utc
-    else
-      y = time.year
-      if date.size == 3 && date[2].size > 0
-        y = date[2].to_i32
-      end
-      Time.new(y, date[1].to_i32, date[0].to_i32, 0, 0, 0, 0, Time::Kind::Local).to_utc
-    end
-  end
-
   def bind_write(bot)
     bot.on("PRIVMSG", message: /^!reminder ([[:graph:]]+) (.+)$/) do |msg, match|
-      dest_time = wordToDate(match.as(Regex::MatchData)[1])
+      dest_time = Time.adaptive_parse(match.as(Regex::MatchData)[1])
       message = match.as(Regex::MatchData)[2]
       DB.exec "INSERT INTO reminders (author, remind_time, content, created_at)
       VALUES ($1, $2, $3, NOW())", [msg.source_id, dest_time, message]
