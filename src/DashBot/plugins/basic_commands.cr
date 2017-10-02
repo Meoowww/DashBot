@@ -1,7 +1,7 @@
 module DashBot::Plugins::BasicCommands
   extend self
 
-  WHAT = %w(ce que tu dis n a aucun sens)
+  WHAT = %w(ce que tu dis n'a aucun sens)
 
   def bind(bot)
     bot.on("JOIN") do |msg|
@@ -15,15 +15,15 @@ module DashBot::Plugins::BasicCommands
       bot.pong(msg.message)
     end.on("PRIVMSG", message: /^!ping/) do |msg|
       msg.reply "pong #{msg.hl}"
-    end.on("PRIVMSG", message: /^!roll ([^:]+)( *: *(.+))?/) do |msg, match|
+    end.on("PRIVMSG", message: /^!roll *([^:]+)( *: *(.+))?/) do |msg, match|
       match = match.as Regex::MatchData
       r = Rollable::Roll.parse(match[1]).compact!.order!
       result = r.test_details
       msg.reply "#{msg.hl}: [#{match[3]?}] #{result.sum} (#{r.to_s} = #{result.join(", ")})"
-    end.on("PRIVMSG", message: /^!call (.+)/) do |msg, match|
+    end.on("PRIVMSG", message: /^!call *(.+)/) do |msg, match|
       match = match.as Regex::MatchData
       msg.reply "I'm calling #{match[1]} right now"
-    end.on("PRIVMSG", message: /($| )what(^| )/) do |msg, match|
+    end.on("PRIVMSG", message: /(^| )what($| )/i) do |msg, match|
       msg.reply WHAT.shuffle.join(" ")
     end
   end

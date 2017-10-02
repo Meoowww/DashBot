@@ -19,6 +19,7 @@ module DashBot
     Plugins::AdminCommands.bind(bot)
     Plugins::Points.bind(bot)
     Plugins::Messages.bind(bot)
+    Plugins::Reminder.bind(bot)
     Plugins::Rpg.bind(bot)
     Plugins::Random.bind(bot)
 
