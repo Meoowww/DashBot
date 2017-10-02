@@ -26,5 +26,5 @@ shards:
 
   rollable:
     github: Nephos/crystal_rollable
-    version: 0.1.4
+    commit: 4e61ef06571280a2df3aa6751f769aacdeab23fd
 
