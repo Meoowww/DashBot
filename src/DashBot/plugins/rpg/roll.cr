@@ -12,7 +12,7 @@ module DashBot::Plugins::Rpg::Roll
 
   # !rroll NAME DICE = prepare a new dice named NAME
   def bind_add_roll(bot)
-    bot.on("PRIVMSG", message: /^!rroll ([[:graph:]]+) ([[:graph:]]+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!rroll +([[:graph:]]+) +([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
 
       # Check for roll correctness
@@ -39,7 +39,7 @@ module DashBot::Plugins::Rpg::Roll
 
   # !rrol NAME = roll the dice named NAME
   def bind_launch_roll(bot)
-    bot.on("PRIVMSG", message: /^!rroll ([[:graph:]]+) *$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!rroll +([[:graph:]]+) +$/) do |msg, match|
       # Do not trigger if the user was registering a roll
       msg_match = match.as Regex::MatchData
       begin
@@ -58,7 +58,7 @@ module DashBot::Plugins::Rpg::Roll
 
   # !groll NAME MAX = roll the dice from everyone (limited by MAX)
   def bind_group_launch_roll(bot)
-    bot.on("PRIVMSG", message: /^!groll ([[:graph:]]+)(?: (\d+))? *$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!groll +([[:graph:]]+)(?: +(\d+))? +$/) do |msg, match|
       match = match.as Regex::MatchData
       limit = (match[2]? || "8").to_i
       all_rolls = DB.query_all("SELECT owner, roll FROM dies WHERE name = $1",
@@ -76,7 +76,7 @@ module DashBot::Plugins::Rpg::Roll
 
   # !droll NAME = remove the dice
   def bind_del_roll(bot)
-    bot.on("PRIVMSG", message: /^!droll ([[:graph:]]+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!droll +([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
       # Check if roll is in database
       n = DB.query_one("SELECT COUNT(*) FROM dies WHERE name = $1 AND owner = $2",
@@ -94,7 +94,7 @@ module DashBot::Plugins::Rpg::Roll
 
   # !lroll OWNER?
   def bind_list_roll(bot)
-    bot.on("PRIVMSG", message: /^!lroll ([[:graph:]]+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!lroll +([[:graph:]]+)/) do |msg, match|
       msg_match = match.as Regex::MatchData
       res = DB.query_one("SELECT roll FROM dies WHERE name = $1 AND owner = $2",
         [msg_match[1], msg.source_id], as: {String})
@@ -106,7 +106,7 @@ module DashBot::Plugins::Rpg::Roll
       end
     end
 
-    bot.on("PRIVMSG", message: /^!lroll *$/) do |msg|
+    bot.on("PRIVMSG", message: /^!lroll +$/) do |msg|
       # Do not trigger if the user was asking for a specific dice
       rolls = DB.query_all("SELECT name, roll FROM dies WHERE owner = $1",
         [msg.source_id], as: {String, String}).map { |dies| "#{dies[0]}: #{dies[1]}" }.join(", ")

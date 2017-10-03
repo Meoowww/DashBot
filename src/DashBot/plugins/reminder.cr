@@ -13,7 +13,7 @@ module DashBot::Plugins::Reminder
   end
 
   def bind_write(bot)
-    bot.on("PRIVMSG", message: /^!reminder ([[:graph:]]+) (.+)$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!reminder +([[:graph:]]+) +(.+)$/) do |msg, match|
       dest_time = Time.adaptive_parse(match.as(Regex::MatchData)[1])
       message = match.as(Regex::MatchData)[2]
       DB.exec "INSERT INTO reminders (author, remind_time, content, created_at)
