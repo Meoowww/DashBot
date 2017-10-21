@@ -22,9 +22,9 @@ shards:
 
   pg:
     github: will/crystal-pg
-    version: 0.13.3
+    version: 0.13.4
 
   rollable:
     github: Nephos/crystal_rollable
-    commit: 4e61ef06571280a2df3aa6751f769aacdeab23fd
+    commit: 98590287860e3307db6a7ff72774ab1469d90195
 
