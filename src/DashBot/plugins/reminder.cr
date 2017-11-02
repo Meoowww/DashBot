@@ -26,7 +26,7 @@ module DashBot::Plugins::Reminder
     bot.on("PRIVMSG", message: /^!remindme$/) do |msg, match|
       messages = DB.query_all(
         "SELECT id, author, remind_time, content, created_at, checked_at, read_at FROM reminders WHERE read_at IS NULL AND author = $1",
-          [msg.source_id], as: {Int32, String, Time, String, Time, Time?, Time?}) rescue nil
+        [msg.source_id], as: {Int32, String, Time, String, Time, Time?, Time?}) rescue nil
       if messages
         messages.each do |m|
           message = {id: m[0], author: m[1], remind_time: m[2], content: m[3], created_at: m[4], read_at: m[5]}
@@ -49,7 +49,7 @@ module DashBot::Plugins::Reminder
     bot.on("PING") do |msg|
       messages = DB.query_all(
         "SELECT id, author, remind_time, content, created_at, read_at FROM reminders WHERE checked_at IS NULL AND read_at IS NULL",
-          as: {Int32, String, Time, String, Time, Time?}) rescue nil
+        as: {Int32, String, Time, String, Time, Time?}) rescue nil
       if messages
         messages.each do |m|
           message = {id: m[0], author: m[1], remind_time: m[2], content: m[3], created_at: m[4], read_at: m[5]}
