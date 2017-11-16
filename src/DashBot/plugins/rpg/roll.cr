@@ -52,7 +52,7 @@ module DashBot::Plugins::Rpg::Roll
 
       r = Rollable::Roll.parse(roll).compact!.order!
       result = r.test_details
-      bot.reply msg, "#{msg.source}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
+      bot.reply msg, "#{msg.source.source_id}: #{result.sum} (#{r.to_s} = #{result.join(", ")})"
     end
   end
 
