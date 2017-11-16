@@ -6,8 +6,8 @@ module DashBot::Plugins::Random
       match = match.as(Regex::MatchData)
       list = match[1]
       values = list.split(/(, )|([^,] )/)
-      msg.reply "Values: #{values}"
-      msg.reply values.sample
+      bot.reply msg, "Values: #{values}"
+      bot.reply msg, values.sample
     end
   end
 end

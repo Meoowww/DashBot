@@ -1,8 +1,8 @@
 version: 1.0
 shards:
-  CrystalIrc:
-    github: Meoowww/CrystalIrc
-    commit: b6742edf45733ad4fe0ba9fa774799094c1ac8e3
+  crirc:
+    github: Meoowww/Crirc
+    commit: 4fd50613f425628ba2bfdaf25f3868fb731cb54e
 
   daemonize:
     github: DougEverly/daemonize.cr
@@ -10,7 +10,7 @@ shards:
 
   db:
     github: crystal-lang/crystal-db
-    version: 0.4.2
+    version: 0.4.3
 
   dotenv:
     github: gdotdesign/cr-dotenv

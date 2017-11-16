@@ -8,9 +8,9 @@ license: MIT
 
 dependencies:
   # irc
-  CrystalIrc:
-    github: Meoowww/CrystalIrc
-    branch: develop
+  crirc:
+    github: Meoowww/Crirc
+    branch: master
   # dice roll
   rollable:
     github: Nephos/crystal_rollable

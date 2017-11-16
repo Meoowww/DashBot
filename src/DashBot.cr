@@ -1,37 +1,58 @@
 #!/usr/bin/env crystal
 
-require "CrystalIrc"
+require "crirc"
 require "rollable"
 require "./DashBot/*"
 require "./DashBot/plugins/*"
 
+# Extention of `String`.
+module DashBot::Source
+  def source_nick : String
+    self.split("!")[0].to_s
+  end
+
+  def source_id : String
+    self.split("!")[1].to_s.split("@")[0].to_s
+  end
+
+  def source_whois : String
+    self.split("!")[1].to_s.split("@")[1].to_s
+  end
+end
+
+class String
+  include DashBot::Source
+end
+
 module DashBot
   def start
     Arguments.new.use
-    bot = CrystalIrc::Bot.new ip: "irc.mozilla.org", port: 6667_u16, ssl: false, nick: "Dasshyx", read_timeout: 300_u16
+    client = Crirc::Network::Client.new(ip: "irc.mozilla.org", port: 6667_u16, ssl: false, nick: "Dasshyxtest", read_timeout: 300_u16)
+    client.connect
+    client.start do |bot|
 
-    Plugins::BasicCommands.bind(bot)
-    Plugins::UserCommands.bind(bot)
-    Plugins::AdminCommands.bind(bot)
-    Plugins::Points.bind(bot)
-    Plugins::Messages.bind(bot)
-    Plugins::Reminder.bind(bot)
-    Plugins::Rpg.bind(bot)
-    Plugins::Random.bind(bot)
+      Plugins::BasicCommands.bind(bot)
+      Plugins::UserCommands.bind(bot)
+      Plugins::AdminCommands.bind(bot)
+      Plugins::Points.bind(bot)
+      Plugins::Messages.bind(bot)
+      Plugins::Reminder.bind(bot)
+      Plugins::Rpg.bind(bot)
+      Plugins::Random.bind(bot)
 
-    bot.connect.on_ready do
-      bot.join (ARGV.empty? ? ["#equilibre"] : ARGV).map { |chan| CrystalIrc::Chan.new(chan) }
-    end
+      bot.on_ready do
+        bot.join (ARGV.empty? ? ["#equilibre"] : ARGV).map { |chan| Crirc::Protocol::Chan.new(chan) }
+      end
 
-    loop do
-      begin
-        bot.gets do |m|
+      loop do
+        begin
+          m = bot.gets
           break if m.nil?
           STDERR.puts "[#{Time.now}] #{m}"
           spawn { bot.handle(m.as(String)) }
+        rescue IO::Timeout
+          puts "Nothing happened..."
         end
-      rescue IO::Timeout
-        puts "Nothing happened..."
       end
     end
   end
