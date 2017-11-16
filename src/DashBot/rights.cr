@@ -11,7 +11,7 @@ module DashBot
       groups.any? { |group| authorized? msg, group }
     end
 
-    def authorize!(msg : Irc::Message, group = "admin", reply = "Unauthorized")
+    def authorize!(msg : CrystalIrc::Message, group = "admin", reply = "Unauthorized")
       return true if authorized? msg, group
       msg.reply reply
       false

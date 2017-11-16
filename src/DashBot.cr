@@ -5,10 +5,6 @@ require "rollable"
 require "./DashBot/*"
 require "./DashBot/plugins/*"
 
-module Irc
-  include CrystalIrc
-end
-
 module DashBot
   def start
     Arguments.new.use
@@ -24,7 +20,7 @@ module DashBot
     Plugins::Random.bind(bot)
 
     bot.connect.on_ready do
-      bot.join (ARGV.empty? ? ["#equilibre"] : ARGV).map { |chan| Irc::Chan.new(chan) }
+      bot.join (ARGV.empty? ? ["#equilibre"] : ARGV).map { |chan| CrystalIrc::Chan.new(chan) }
     end
 
     loop do
