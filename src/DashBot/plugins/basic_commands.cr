@@ -25,7 +25,7 @@ module DashBot::Plugins::BasicCommands
       bot.reply msg, "I'm calling #{match[1]} right now"
     end.on("PRIVMSG", message: /(^| )what($| )/i) do |msg, match|
       bot.reply msg, WHAT.shuffle.join(" ")
-    end.on("PRIVMSG", message: /[^\W]*AH[\W]/) do |msg, match|
+    end.on("PRIVMSG", message: /(^|\W)AH($|\W)/) do |msg, match|
       bot.reply msg, "AH"
     end.on("PRIVMSG", message: /^oulah?$/i) do |msg, match|
       bot.reply msg, "Vous êtes con"
