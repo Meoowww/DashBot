@@ -27,7 +27,7 @@ end
 module DashBot
   def start
     Arguments.new.use
-    client = Crirc::Network::Client.new(ip: "irc.mozilla.org", port: 6667_u16, ssl: false, nick: "Dasshyxtest2", read_timeout: 300_u16)
+    client = Crirc::Network::Client.new(ip: "irc.mozilla.org", port: 6667_u16, ssl: false, nick: "Dasshyx#{rand(1..9)}", read_timeout: 300_u16)
     client.connect
     client.start do |bot|
       Plugins::BasicCommands.bind(bot)
