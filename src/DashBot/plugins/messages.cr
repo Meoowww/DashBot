@@ -12,7 +12,7 @@ module DashBot::Plugins::Messages
   end
 
   def bind_write(bot)
-    bot.on("PRIVMSG", message: /^!write +(\w+) +(.+)$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!write +(\w+) +(.+)$/, doc: {"!write", "!write someone message"}) do |msg, match|
       id = match.as(Regex::MatchData)[1]
       message = match.as(Regex::MatchData)[2]
       DB.exec "INSERT INTO messages (author, dest, content, created_at)
@@ -23,7 +23,7 @@ module DashBot::Plugins::Messages
   end
 
   def bind_read(bot)
-    bot.on("PRIVMSG", message: /^!read$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!read$/, doc: {"!read", "!read    read the inbox"}) do |msg, match|
       m = DB.query_one(
         "SELECT id, author, dest, content, created_at, read_at FROM messages WHERE read_at IS NULL AND dest = $1
          ORDER BY created_at ASC LIMIT 1", [msg.source.source_id], as: {Int32, String, String, String, Time, Time?}) rescue nil

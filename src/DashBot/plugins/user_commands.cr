@@ -15,7 +15,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_group_rm(bot)
-    bot.on("PRIVMSG", message: /^!group +rm +(\w+) +(\w+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!group +rm +(\w+) +(\w+)/, doc: {"!group rm", "!group rm user group"}) do |msg, match|
       next if !authorize! bot, msg
       match = match.as Regex::MatchData
       if user_exists? match[1]
@@ -34,7 +34,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_group_ls(bot)
-    bot.on("PRIVMSG", message: /^!group +(?:list|ls) (\w+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!group +(?:list|ls) (\w+)/, doc: {"!group ls", "!group ls user"}) do |msg, match|
       match = match.as Regex::MatchData
       if user_exists? match[1]
         groups = DB.query_all("SELECT groups.name AS name FROM groups
@@ -48,7 +48,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_group_add(bot)
-    bot.on("PRIVMSG", message: /^!group +add +(\w+) +(\w+)/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!group +add +(\w+) +(\w+)/, doc: {"!group add", "!group add user group"}) do |msg, match|
       next if !authorize! bot, msg
       match = match.as Regex::MatchData
       if user_exists? match[1]
@@ -61,7 +61,7 @@ module DashBot::Plugins::UserCommands
   end
 
   def bind_register(bot)
-    bot.on("PRIVMSG", message: /^!register/) do |msg|
+    bot.on("PRIVMSG", message: /^!register/, doc: {"!register", "!register"}) do |msg|
       if user_exists? msg.source.source_id
         bot.reply msg, "Cannot register \"#{msg.source.source_id}\" twice"
       else

@@ -2,7 +2,7 @@ version: 1.0
 shards:
   crirc:
     github: Meoowww/Crirc
-    commit: 4fd50613f425628ba2bfdaf25f3868fb731cb54e
+    commit: e67bf5a095723a3ed34d1f79153c7fcdb7df8e9a
 
   daemonize:
     github: DougEverly/daemonize.cr

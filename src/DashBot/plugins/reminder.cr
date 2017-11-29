@@ -11,7 +11,7 @@ module DashBot::Plugins::Reminder
   end
 
   def bind_write(bot)
-    bot.on("PRIVMSG", message: /^!reminder +([[:graph:]]+) +(.+)$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!reminder +([[:graph:]]+) +(.+)$/, doc: {"!reminder", "!reminder d/m/y message"}) do |msg, match|
       dest_time = Time.adaptive_parse(match.as(Regex::MatchData)[1])
       message = match.as(Regex::MatchData)[2]
       DB.exec "INSERT INTO reminders (author, remind_time, content, created_at)
@@ -21,7 +21,7 @@ module DashBot::Plugins::Reminder
   end
 
   def bind_read(bot)
-    bot.on("PRIVMSG", message: /^!remindme$/) do |msg, match|
+    bot.on("PRIVMSG", message: /^!remindme$/, doc: {"!remindme", "!remindme"}) do |msg, match|
       messages = DB.query_all(
         "SELECT id, author, remind_time, content, created_at, checked_at, read_at FROM reminders WHERE read_at IS NULL AND author = $1",
         [msg.source.source_id], as: {Int32, String, Time, String, Time, Time?, Time?}) rescue nil
