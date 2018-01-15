@@ -1,6 +1,7 @@
 module DashBot::Plugins::Anarchism
   extend self
   @@is_op = false
+  @@current_chan : Crirc::Protocol::Chan|Nil = nil
   @@user_list = Array(Crirc::Protocol::User).new
 
   def bind(bot)
@@ -21,11 +22,12 @@ module DashBot::Plugins::Anarchism
   def bind_on_op(bot)
     bot.on("MODE") do |msg, _|
       if msg.arguments.to_s.match(/\#.* \+o #{bot.network.nick}\z/)
-        chan = Crirc::Protocol::Chan.new msg.arguments.to_s.split(" ")[0]
+        @@current_chan = Crirc::Protocol::Chan.new msg.arguments.to_s.split(" ")[0]
         @@is_op = true
         @@user_list = Array(Crirc::Protocol::User).new
-        bot.names(chan)
+        bot.names(@@current_chan)
       elsif msg.arguments.to_s.match(/\#.* \-o #{bot.network.nick}\z/)
+        @@current_chan = Crirc::Protocol::Chan.new msg.arguments.to_s.split(" ")[0]
         @@is_op = false
       end
     end
@@ -37,11 +39,8 @@ module DashBot::Plugins::Anarchism
     end
 
     bot.on("366") do |msg, _|
-      if @@is_op
-        @@user_list.each do |user|
-          chan = Crirc::Protocol::Chan.new "#ratonade"
-          bot.mode chan, "+o", user
-        end
+      if @@is_op && !(chan = @@current_chan).nil?
+        @@user_list.each { |user| bot.mode chan, "+o", user }
       end
     end
   end
