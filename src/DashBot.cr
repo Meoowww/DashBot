@@ -38,7 +38,7 @@ module DashBot
       Plugins::Reminder.bind(bot)
       Plugins::Rpg.bind(bot)
       Plugins::Random.bind(bot)
-      Plugins::Anarchism.bind(bot)
+      # Plugins::Anarchism.bind(bot)
 
       bot.on_ready do
         bot.join (ARGV.empty? ? ["#equilibre"] : ARGV).map { |chan| Crirc::Protocol::Chan.new(chan) }
