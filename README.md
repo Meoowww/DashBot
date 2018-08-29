@@ -24,7 +24,6 @@ echo "PG_URL=postgres://root:toor@localhost/dash_bot" > .env
 ./DashBot
 ```
 
-
 ## Usage
 
 

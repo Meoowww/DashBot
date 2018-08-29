@@ -18,7 +18,7 @@ struct Time
 
     parsing_formats.each do |f, v|
       begin
-        t = Format.new(f, Time::Kind::Local).parse(txt + v).to_utc
+        t = Format.new(f).parse(txt + v).to_utc
         t += 365.days if t < Time.now
         return t
       rescue

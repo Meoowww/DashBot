@@ -2,7 +2,7 @@ version: 1.0
 shards:
   crirc:
     github: Meoowww/Crirc
-    commit: 547caf55a8913b62fb536d87108f0da7c697fae7
+    commit: d682bc55601fcba37b56221b18dc3d0d58c5eca5
 
   daemonize:
     github: DougEverly/daemonize.cr
@@ -18,11 +18,11 @@ shards:
 
   micrate:
     github: juanedi/micrate
-    version: 0.3.0
+    version: 0.3.3
 
   pg:
     github: will/crystal-pg
-    version: 0.14.1
+    version: 0.15.0
 
   rollable:
     github: Nephos/crystal_rollable
