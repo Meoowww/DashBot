@@ -1,7 +1,7 @@
 module DashBot::Plugins::Anarchism
   extend self
   @@is_op = false
-  @@current_chan : Crirc::Protocol::Chan|Nil = nil
+  @@current_chan : Crirc::Protocol::Chan | Nil = nil
   @@user_list = Array(Crirc::Protocol::User).new
 
   def bind(bot)

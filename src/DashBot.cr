@@ -2,8 +2,11 @@
 
 require "crirc"
 require "rollable"
-require "./DashBot/*"
-require "./DashBot/plugins/*"
+require "yaml"
+require "json"
+
+class DashBot
+end
 
 # Extention of `String`.
 module DashBot::Source
@@ -24,21 +27,44 @@ class String
   include DashBot::Source
 end
 
-module DashBot
+module Loader
+  def fetch_configuration(file)
+    configuration = File.read(file)
+    if file.ends_with?(".yml") || file.ends_with?(".yaml")
+      YAML.parse(configuration)
+    else
+      JSON.parse(configuration)
+    end
+  end
+
+  macro bind_plugins(config, *plugins)
+    {% for plugin in plugins %}
+      plugin = Plugins::{{plugin.id}}
+      plugin_config = Hash(String, String).new
+      config[{{plugin}}].each { |k, v| plugin_config[k.to_s] = v.to_s }
+      plugin_instance = plugin.new(plugin_config)
+      plugin_instance.bind(bot) if plugin_instance.enabled?
+    {% end %}
+  end
+
+  extend self
+end
+
+require "./DashBot/*"
+require "./DashBot/plugins/*"
+
+class DashBot
+  def initialize
+    @config = Hash(String, Hash(String, String)).new
+  end
+
   def start
     Arguments.new.use
     client = Crirc::Network::Client.new(ip: "irc.mozilla.org", port: 6667_u16, ssl: false, nick: "Dasshyx#{rand(1..9)}", read_timeout: 300_u16)
     client.connect
     client.start do |bot|
-      Plugins::BasicCommands.bind(bot)
-      Plugins::UserCommands.bind(bot)
-      Plugins::AdminCommands.bind(bot)
-      Plugins::Points.bind(bot)
-      Plugins::Messages.bind(bot)
-      Plugins::Reminder.bind(bot)
-      Plugins::Rpg.bind(bot)
-      Plugins::Random.bind(bot)
-      # Plugins::Anarchism.bind(bot)
+      config = Loader.fetch_configuration("config.json")
+      Loader.bind_plugins(config, "BasicCommands", "UserCommands", "AdminCommands", "Points", "Messages", "Reminder", "Rpg", "Random", "Anarchism"
 
       bot.on_ready do
         bot.join (ARGV.empty? ? ["#equilibre"] : ARGV).map { |chan| Crirc::Protocol::Chan.new(chan) }
@@ -56,13 +82,11 @@ module DashBot
       end
     end
   end
-
-  extend self
 end
 
 loop do
   begin
-    DashBot.start
+    DashBot.new.start
   rescue err
     STDERR.puts err
     STDOUT.puts err

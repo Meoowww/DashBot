@@ -1,6 +1,6 @@
-module DashBot::Plugins::BasicCommands
-  extend self
+require "../plugin"
 
+class DashBot::Plugins::BasicCommands < DashBot::Plugin
   WHAT = %w(ce que tu dis n'a aucun sens)
 
   def bind(bot)
