@@ -31,7 +31,7 @@ module DashBot::Plugins::Messages
         message = {id: m[0], author: m[1], dest: m[2], content: m[3], created_at: m[4], read_at: m[5]}
         # user = User.new(msg.source.source_id)
         date = message[:created_at]
-        if Time.now.to_s("%j") == date.to_s("%j")
+        if Time.utc.to_s("%j") == date.to_s("%j")
           date = date.to_s("%H:%M:%S")
         else
           date = date.to_s("%B, %d at %H:%M:%S")

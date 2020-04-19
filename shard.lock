@@ -2,7 +2,7 @@ version: 1.0
 shards:
   crirc:
     github: Meoowww/Crirc
-    commit: ba7e04248b07d44755268165bcf4d0fc1884548a
+    commit: ffc405d1d4e271aa357c2bb20fc2bd2857b4d094
 
   daemonize:
     github: DougEverly/daemonize.cr
@@ -10,19 +10,19 @@ shards:
 
   db:
     github: crystal-lang/crystal-db
-    version: 0.7.0
+    version: 0.9.0
 
   dotenv:
     github: gdotdesign/cr-dotenv
-    version: 0.3.1
+    version: 0.7.0
 
   micrate:
     github: juanedi/micrate
-    version: 0.4.1
+    version: 0.7.0
 
   pg:
     github: will/crystal-pg
-    version: 0.19.0
+    version: 0.21.0
 
   rollable:
     github: Nephos/crystal_rollable

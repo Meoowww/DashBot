@@ -8,10 +8,10 @@ module DashBot::Plugins::BasicCommands
       if msg.source == bot.nick.to_s
         bot.reply msg, "Welcome everypony, what's up ? :)"
       else
-        STDERR.puts "[#{Time.now}] #{msg.source.source_id} joined the chan"
+        STDERR.puts "[#{Time.utc}] #{msg.source.source_id} joined the chan"
       end
     end.on("PING") do |msg|
-      STDERR.puts "[#{Time.now}] PONG :#{msg.message}"
+      STDERR.puts "[#{Time.utc}] PONG :#{msg.message}"
       bot.pong(msg.message)
     end.on("PRIVMSG", message: /^!ping/, doc: {"!ping", "!ping"}) do |msg|
       bot.reply msg, "pong #{msg.source.source_id}"

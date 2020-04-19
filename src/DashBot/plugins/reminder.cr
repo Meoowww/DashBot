@@ -28,9 +28,9 @@ module DashBot::Plugins::Reminder
       if messages
         messages.each do |m|
           message = {id: m[0], author: m[1], remind_time: m[2], content: m[3], created_at: m[4], read_at: m[5]}
-          if message[:remind_time] < Time.utc_now
+          if message[:remind_time] < Time.utc
             date = message[:remind_time].to_local
-            if Time.now.to_s("%j") == date.to_s("%j")
+            if Time.utc.to_s("%j") == date.to_s("%j")
               date = date.to_s("%H:%M:%S")
             else
               date = date.to_s("%B, %d at %H:%M:%S")
@@ -51,7 +51,7 @@ module DashBot::Plugins::Reminder
       if messages
         messages.each do |m|
           message = {id: m[0], author: m[1], remind_time: m[2], content: m[3], created_at: m[4], read_at: m[5]}
-          if message[:remind_time] < Time.utc_now
+          if message[:remind_time] < Time.utc
             # TODO: fix this so it finds the user's nickname and sends it to it instead
             bot.privmsg Crirc::Protocol::User.new(message[:author]), "You have a new reminder"
             DB.exec "UPDATE reminders SET checked_at = NOW() WHERE id = $1", [message[:id]]

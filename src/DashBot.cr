@@ -48,9 +48,9 @@ module DashBot
         begin
           m = bot.gets
           break if m.nil?
-          STDERR.puts "[#{Time.now}] #{m}"
+          STDERR.puts "[#{Time.utc}] #{m}"
           spawn { bot.handle(m.as(String)) }
-        rescue IO::Timeout
+        rescue IO::TimeoutError
           puts "Nothing happened..."
         end
       end

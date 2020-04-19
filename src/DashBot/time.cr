@@ -1,6 +1,6 @@
 struct Time
   def self.adaptive_parse(txt)
-    t = Time.now
+    t = Time.utc
     parsing_formats = {
       "%R %-d/%m/%Y"    => " #{t.day}/#{t.month}/#{t.year}",
       "%T %-d/%m/%Y"    => " #{t.day}/#{t.month}/#{t.year}",
@@ -19,7 +19,7 @@ struct Time
     parsing_formats.each do |f, v|
       begin
         t = Format.new(f).parse(txt + v).to_utc
-        t += 365.days if t < Time.now
+        t += 365.days if t < Time.utc
         return t
       rescue
       end
