@@ -7,7 +7,7 @@ class DashBot::Arguments
   @out = "/var/log/dash_bot/chans.log"
 
   def use
-    OptionParser.parse! do |parser|
+    OptionParser.parse do |parser|
       parser.banner = "Usage: DashBot [arguments]"
       parser.on("-e error", "--errors=PATH", "Specifies the path of the error log") { |path|
         @err = path
