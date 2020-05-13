@@ -11,7 +11,7 @@ Install ``postgresql``, ``crystal``, and ``crystal-shards``
 git clone https://github.com/Meoowww/DashBot
 cd DashBot
 # Install the libs
-crystal deps install
+shards install
 # Build the project
 crystal b -s --release src/DashBot.cr
 # Configure the database
