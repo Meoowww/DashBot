@@ -1,30 +1,38 @@
-version: 1.0
+version: 2.0
 shards:
   crirc:
-    github: Meoowww/Crirc
-    commit: ffc405d1d4e271aa357c2bb20fc2bd2857b4d094
+    git: https://github.com/meoowww/crirc.git
+    version: 0.5.1+git.commit.c21010a9d9d3ef9067b5610ec4cb4ea389fdc508
 
   daemonize:
-    github: DougEverly/daemonize.cr
-    commit: 03d7da27fe76ee6b77d47a66984969a308a42027
+    git: https://github.com/dougeverly/daemonize.cr.git
+    version: 0.1.0+git.commit.03d7da27fe76ee6b77d47a66984969a308a42027
 
   db:
-    github: crystal-lang/crystal-db
-    version: 0.9.0
+    git: https://github.com/crystal-lang/crystal-db.git
+    version: 0.10.1
 
   dotenv:
-    github: gdotdesign/cr-dotenv
+    git: https://github.com/gdotdesign/cr-dotenv.git
     version: 0.7.0
 
   micrate:
-    github: juanedi/micrate
-    version: 0.7.0
+    git: https://github.com/juanedi/micrate.git
+    version: 0.10.0
+
+  mysql:
+    git: https://github.com/crystal-lang/crystal-mysql.git
+    version: 0.13.0
 
   pg:
-    github: will/crystal-pg
-    version: 0.21.0
+    git: https://github.com/will/crystal-pg.git
+    version: 0.23.1
 
   rollable:
-    github: Nephos/crystal_rollable
-    commit: 98590287860e3307db6a7ff72774ab1469d90195
+    git: https://github.com/nephos/crystal_rollable.git
+    version: 1.0.0+git.commit.050af10ac2076293e79c69b511d1f3e0e0835f86
+
+  sqlite3:
+    git: https://github.com/crystal-lang/crystal-sqlite3.git
+    version: 0.18.0
 

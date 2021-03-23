@@ -18,8 +18,8 @@ class DashBot::Arguments
         Dir.mkdir(File.dirname(@out)) if !Dir.exists?(File.dirname(@out))
       }
       parser.on("-h", "--help", "Show this help") { puts parser; exit }
-      parser.on("-d", "--daemonize", "Run in background as daemon") { @daemonize = true }
+      # parser.on("-d", "--daemonize", "Run in background as daemon") { @daemonize = true }
     end
-    Daemonize.daemonize(stdout: @out, stderr: @err, stdin: "/dev/null") if @daemonize
+    # Daemonize.daemonize(stdout: @out, stderr: @err, stdin: "/dev/null") if @daemonize
   end
 end
