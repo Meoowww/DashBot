@@ -10,10 +10,8 @@ module DashBot::Plugins::Points
   def bind_add(bot)
     bot.on("PRIVMSG", message: /^!p +([[:graph:]]+) +([[:graph:]]+)/, doc: {"!p", "!p type someone"}) do |msg, match|
       match = match.as Regex::MatchData
-      DB.exec "INSERT INTO points (assigned_to, assigned_by, type, created_at)
-      VALUES ($1, $2, $3, NOW())", [match[2], msg.source.source_id, match[1].downcase]
-      n = DB.query_one("SELECT COUNT(*) FROM points WHERE assigned_to = $1 AND type = $2",
-        [match[2], match[1].downcase], as: {Int64})
+      DB.exec "INSERT INTO points (assigned_to, assigned_by, type, created_at) VALUES ($1, $2, $3, NOW())", match[2], msg.source.source_id, match[1].downcase
+      n = DB.query_one("SELECT COUNT(*) FROM points WHERE assigned_to = $1 AND type = $2", match[2], match[1].downcase, as: {Int64})
       bot.reply msg, "#{match[2]} has now #{n} point#{n > 1 ? "s" : ""} #{match[1]}"
     end
   end

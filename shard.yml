@@ -1,10 +1,12 @@
 name: DashBot
-version: 0.1.0
+version: 1.0.0
 
 authors:
   - Arthur Poulet <arthur.poulet@mailoo.org>
 
 license: MIT
+
+crystal: 1.0.0
 
 dependencies:
   # irc
