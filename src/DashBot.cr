@@ -27,7 +27,13 @@ end
 module DashBot
   def start
     Arguments.new.use
-    client = Crirc::Network::Client.new(ip: "chat.freenode.net", port: 6697_u16, ssl: true, nick: "Dasshyx#{rand(1..9)}", read_timeout: 300_u16)
+    client = Crirc::Network::Client.new(
+      ip: ENV["NETWORK_HOST"],
+      port: ENV["NETWORK_PORT"].to_u16,
+      ssl: ENV["NETWORK_SSL"] == "true",
+      nick: ENV["NICKNAME"] + "#{rand(1..9)}",
+      read_timeout: 300_u16,
+    )
     client.connect
     client.start do |bot|
       Plugins::BasicCommands.bind(bot)
